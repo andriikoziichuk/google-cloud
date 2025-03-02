@@ -39,3 +39,4 @@ out/
 src/main/resources/credentials.json
 /tokens/
 /application/tokens/
+gcalendar/src/main/resources/credentials.json
