@@ -1,19 +1,13 @@
-package ua.koziichuk.drive.service;
+package ua.koziichuk.drive.service.service;
 
-import com.google.api.client.auth.oauth2.Credential;
-import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.InputStreamContent;
-import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.Permission;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.security.GeneralSecurityException;
 import java.util.List;
 
 @Service
@@ -56,6 +50,29 @@ public class GoogleDriveService {
     public void uploadFile(File fileMetadata, InputStreamContent mediaContent) throws IOException {
         driveService.files().create(fileMetadata, mediaContent)
                 .setFields("id")
+                .execute();
+    }
+
+    public Permission getPermission(String fileId, String permissionId) throws IOException {
+        return driveService.permissions()
+                .get(fileId, permissionId)
+                .execute();
+    }
+
+    // Зміна рівня доступу
+    public void updatePermission(String fileId, String permissionId, String newRole) throws IOException {
+        Permission permission = new Permission()
+                .setRole(newRole); // "reader", "writer", "owner"
+
+        driveService.permissions()
+                .update(fileId, permissionId, permission)
+                .execute();
+    }
+
+    // Видалення доступу
+    public void deletePermission(String fileId, String permissionId) throws IOException {
+        driveService.permissions()
+                .delete(fileId, permissionId)
                 .execute();
     }
 }

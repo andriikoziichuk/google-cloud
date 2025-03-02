@@ -7,7 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ua.koziichuk.drive.service.GoogleDriveService;
+import ua.koziichuk.drive.service.service.GoogleDriveService;
+import ua.koziichuk.drive.service.service.GoogleFormsService;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -19,6 +20,8 @@ public class DriveController {
 
     @Autowired
     private GoogleDriveService driveService;
+    @Autowired
+    private GoogleFormsService formsService;
 
     @PostMapping("/create-folder")
     public ResponseEntity<String> createFolder(@RequestParam String folderName,
@@ -69,4 +72,17 @@ public class DriveController {
 
         return ResponseEntity.ok("File uploaded successfully");
     }
+
+
+    // Збереження відповідей з Google Forms у Google Drive
+    @PostMapping("/save-responses/{formId}")
+    public ResponseEntity<String> saveResponses(@PathVariable String formId) {
+        try {
+            formsService.saveResponsesToDrive(formId);
+        } catch (IOException e) {
+            return ResponseEntity.badRequest().body("Error saving responses");
+        }
+        return ResponseEntity.ok("Responses saved successfully");
+    }
+
 }
