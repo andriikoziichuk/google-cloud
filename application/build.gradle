@@ -1,0 +1,19 @@
+plugins {
+    id 'java'
+    id 'idea'
+    id 'org.springframework.boot'
+}
+
+dependencies {
+    implementation project(':gcalendar')
+    implementation project(':drive')
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+}
+
+springBoot {
+    buildInfo()
+}
+
+task prepareKotlinBuildScriptModel {
+
+}

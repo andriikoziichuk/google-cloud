@@ -1,1 +1,6 @@
-rootProject.name = 'calendar'
+rootProject.name = 'google-cloud'
+
+include 'application'
+include 'drive'
+include 'gcalendar'
+

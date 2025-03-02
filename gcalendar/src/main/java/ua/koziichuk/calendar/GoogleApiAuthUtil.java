@@ -24,7 +24,7 @@ import java.util.Set;
 public class GoogleApiAuthUtil {
     private static final String TOKENS_DIRECTORY_PATH = "tokens";
     private static final Set<String> SCOPES = CalendarScopes.all();
-    private static final String CREDENTIALS_FILE_PATH = "src/main/resources/credentials.json";
+    private static final String CREDENTIALS_FILE_PATH = "gcalendar/src/main/resources/credentials.json";
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
     private static final String APPLICATION_NAME = "calendar";
 

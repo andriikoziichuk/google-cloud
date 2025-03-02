@@ -8,6 +8,7 @@ import com.google.api.services.calendar.model.Events;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ua.koziichuk.calendar.dto.EventInfo;
 import ua.koziichuk.calendar.dto.EventRequest;
 import ua.koziichuk.calendar.dto.ScheduleData;
 import ua.koziichuk.calendar.model.Course;
@@ -17,6 +18,7 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -26,7 +28,7 @@ public class GoogleCalendarService {
     @Autowired
     private TimeSlotFinder timeSlotFinder;
 
-    public List<Event> getFollowingItems() throws IOException, GeneralSecurityException {
+    public List<EventInfo> getFollowingItems() throws IOException, GeneralSecurityException {
         // Build a new authorized API client service.
 
         // List the next 10 events from the primary calendar.
@@ -37,12 +39,14 @@ public class GoogleCalendarService {
                 .setOrderBy("startTime")
                 .setSingleEvents(true)
                 .execute();
-        return events.getItems();
+        return events.getItems().stream()
+                .map(this::eventConverter)
+                .collect(Collectors.toList());
     }
 
-    public Event insertEvent(EventRequest event) throws IOException, GeneralSecurityException {
+    public EventInfo insertEvent(EventRequest event) throws IOException, GeneralSecurityException {
         Event content = buildEvent(event);
-        return createEvent(content);
+        return eventConverter(createEvent(content));
     }
 
     public void scheduleEvents(ScheduleData scheduleData) throws Exception {
@@ -78,5 +82,15 @@ public class GoogleCalendarService {
                 .setLocation(eventRequest.getLocation())
                 .setStart(new EventDateTime().setDateTime(new DateTime(eventRequest.getStart())))
                 .setEnd(new EventDateTime().setDateTime(new DateTime(eventRequest.getEnd())));
+    }
+
+    private EventInfo eventConverter(Event event) {
+        return EventInfo.builder()
+                .id(event.getId())
+                .summary(event.getSummary())
+                .description(event.getDescription())
+                .start(event.getStart().getDateTime().toStringRfc3339())
+                .end(event.getEnd().getDateTime().toStringRfc3339())
+                .build();
     }
 }

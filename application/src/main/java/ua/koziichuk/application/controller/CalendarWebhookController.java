@@ -1,12 +1,12 @@
-package ua.koziichuk.calendar.controller;
+package ua.koziichuk.application.controller;
 
-import com.google.api.services.calendar.model.Event;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ua.koziichuk.calendar.dto.EventInfo;
 import ua.koziichuk.calendar.service.CalendarWatchService;
 
 import java.util.Set;
@@ -19,7 +19,7 @@ public class CalendarWebhookController {
     private CalendarWatchService watchService;
 
     @PostMapping("/calendar")
-    public ResponseEntity<Set<Event>> handleCalendarUpdate(@RequestHeader("X-Goog-Resource-ID") String resourceId) {
+    public ResponseEntity<Set<EventInfo>> handleCalendarUpdate(@RequestHeader("X-Goog-Resource-ID") String resourceId) {
         return ResponseEntity.ok(watchService.processCalendarChanges(resourceId));
     }
 }
