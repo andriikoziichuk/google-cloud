@@ -1,5 +1,6 @@
-package ua.koziichuk.application.controller;
+package ua.koziichuk.calendar.controller;
 
+import com.google.api.services.calendar.model.Event;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,12 +20,12 @@ public class CalendarController {
     private GoogleCalendarService googleCalendarService;
 
     @GetMapping("/events")
-    public ResponseEntity<List<?>> getFollowingEvents() throws GeneralSecurityException, IOException {
+    public ResponseEntity<List<Event>> getFollowingEvents() throws GeneralSecurityException, IOException {
         return ResponseEntity.ok(googleCalendarService.getFollowingItems());
     }
 
     @PostMapping("/events/add")
-    public ResponseEntity<?> addEvent(@RequestBody EventRequest event) throws GeneralSecurityException, IOException {
+    public ResponseEntity<Event> addEvent(@RequestBody EventRequest event) throws GeneralSecurityException, IOException {
         return ResponseEntity.ok(googleCalendarService.insertEvent(event));
     }
 

@@ -9,13 +9,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import ua.koziichuk.calendar.dto.EventInfo;
 
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -39,27 +37,10 @@ public class CalendarWatchService {
         calendar.events().watch(calendarId, channel).execute();
     }
 
-    public Set<EventInfo> processCalendarChanges(String resourceId) {
-        try {
-            Set<Event> events = fetchEventDetails(resourceId);
-            logChanges(events);
-            return events.stream()
-                    .map(this::eventConverter)
-                    .collect(Collectors.toSet());
-        } catch (Exception e) {
-            log.error("Error processing changes", e);
-            return null;
-        }
-    }
-
-    private EventInfo eventConverter(Event event) {
-        return EventInfo.builder()
-                .id(event.getId())
-                .summary(event.getSummary())
-                .description(event.getDescription())
-                .start(event.getStart().getDateTime().toStringRfc3339())
-                .end(event.getEnd().getDateTime().toStringRfc3339())
-                .build();
+    public Set<Event> processCalendarChanges(String resourceId) throws Exception {
+        Set<Event> events = fetchEventDetails(resourceId);
+        logChanges(events);
+        return events;
     }
 
     private Set<Event> fetchEventDetails(String calendarId) throws Exception {

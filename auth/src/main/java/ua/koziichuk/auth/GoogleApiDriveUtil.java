@@ -1,4 +1,4 @@
-package ua.koziichuk.calendar;
+package ua.koziichuk.auth;
 
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
@@ -12,6 +12,7 @@ import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.CalendarScopes;
+import com.google.api.services.drive.Drive;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,10 +22,10 @@ import java.security.GeneralSecurityException;
 import java.util.Set;
 
 @Configuration
-public class GoogleApiAuthUtil {
+public class GoogleApiDriveUtil {
     private static final String TOKENS_DIRECTORY_PATH = "tokens";
     private static final Set<String> SCOPES = CalendarScopes.all();
-    private static final String CREDENTIALS_FILE_PATH = "calendar/src/main/resources/credentials.json";
+    private static final String CREDENTIALS_FILE_PATH = "auth/src/main/resources/credentials.json";
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
     private static final String APPLICATION_NAME = "calendar";
 
@@ -61,4 +62,11 @@ public class GoogleApiAuthUtil {
                 .build();
     }
 
+    @Bean
+    public Drive drive() throws GeneralSecurityException, IOException {
+        final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+        return new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential())
+                .setApplicationName(APPLICATION_NAME)
+                .build();
+    }
 }

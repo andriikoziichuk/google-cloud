@@ -39,4 +39,4 @@ out/
 src/main/resources/credentials.json
 /tokens/
 /application/tokens/
-calendar/src/main/resources/credentials.json
+auth/src/main/resources/credentials.json
