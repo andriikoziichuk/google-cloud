@@ -13,6 +13,8 @@ import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.services.drive.Drive;
+import com.google.api.services.forms.v1.Forms;
+import com.google.api.services.sheets.v4.Sheets;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -66,6 +68,22 @@ public class GoogleApiDriveUtil {
     public Drive drive() throws GeneralSecurityException, IOException {
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
         return new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential())
+                .setApplicationName(APPLICATION_NAME)
+                .build();
+    }
+
+    @Bean
+    public Forms forms() throws GeneralSecurityException, IOException {
+        final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+        return new Forms.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential())
+                .setApplicationName(APPLICATION_NAME)
+                .build();
+    }
+
+    @Bean
+    public Sheets sheets() throws GeneralSecurityException, IOException {
+        final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+        return new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential())
                 .setApplicationName(APPLICATION_NAME)
                 .build();
     }
